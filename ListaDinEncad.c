@@ -133,13 +133,9 @@ void salva_arq(Lista* li, FILE *indexFile){
     fwrite(&c2, sizeof(char), 1, indexFile);
     }
     Elem* no = *li;
-    int id;
-    int RRN;
     while(no != NULL){
-        id = no->dados.idPessoa;
-        RRN = no->dados.RRN;
-        fwrite(&id, sizeof(int), 1, indexFile);
-        fwrite(&RRN, sizeof(int), 1, indexFile);
+        fwrite(&(no->dados.idPessoa), sizeof(int), 1, indexFile);
+        fwrite(&(no->dados.RRN), sizeof(int), 1, indexFile);
         no = no->prox;
     }
 }

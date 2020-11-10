@@ -19,7 +19,7 @@ int main() {
 
     switch(mode){
         case 1:
-            scanf("%s %s %s",arqvEntrada,arqIndexaPessoa,arqPessoa);
+            scanf("%s %s %s",arqvEntrada,arqPessoa,arqIndexaPessoa);
             leArqBin(arqvEntrada,arqPessoa,arqIndexaPessoa);
             binarioNaTela1(arqPessoa, arqIndexaPessoa);
             break;

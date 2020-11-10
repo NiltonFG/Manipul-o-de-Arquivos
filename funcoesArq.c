@@ -44,12 +44,13 @@ void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
     fgets(cabec,256,csvFile);
 
     int quantRegistros = 0; //indica a quantidade de registros para o cabeçalho
-
     while(fscanf(csvFile, "%d%*c", &(pessoa->idPessoa)) != EOF){
-
+        fflush(csvFile);
         pessoa->RRN = quantRegistros;
-        fscanf(csvFile, "%50[^,]", pessoa->nomePessoa);
-        fscanf(csvFile, "%*c%d[^,]", &(pessoa->idade) );
+        fscanf(csvFile, "%60[^,]", pessoa->nomePessoa);
+
+        fscanf(csvFile, "%*c%d", &(pessoa->idade) );
+        fflush(csvFile);
         fscanf(csvFile, "%*c%s", pessoa->twitterPessoa);
         pessoa->nomePessoa[39] = '\0';
         pessoa->twitterPessoa[14] = '\0';
@@ -59,6 +60,7 @@ void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
 
         quantRegistros++;
         fflush(csvFile);
+        free(pessoa);
         pessoa = (Pessoa*)malloc(sizeof(Pessoa));
     }
 
@@ -82,49 +84,46 @@ void insereIndex(Lista* li, Pessoa* pessoa){
     insere_lista_ordenada(li,index1);
 }
 
-void insereBinario(Pessoa* pessoa, FILE* binFile){
+void insereBinario(Pessoa* pessoa, FILE* binFile) {
     char c = '1';
     char c2 = '$';
     char c3 = '\0';
 
-    long tamanho = ftell(binFile);
+
+    printf("%d %s %d %s\n", pessoa->idPessoa, pessoa->nomePessoa, pessoa->idade, pessoa->twitterPessoa);
 
     fwrite(&c, sizeof(char), 1, binFile);
-    tamanho = ftell(binFile);
+
 
     fwrite(&(pessoa->idPessoa), sizeof(int), 1, binFile);
-    tamanho = ftell(binFile);
+
 
     int y = strlen(pessoa->nomePessoa);
-    printf("%s\n",pessoa->twitterPessoa);
-    if(strlen(pessoa->nomePessoa) == 0){
+    if (strlen(pessoa->nomePessoa) == 0) {
+
         fwrite(&c3, sizeof(char), 1, binFile);
-        tamanho = ftell(binFile);
-        for(int i = 0; i < 39 ; i++) {
+        for (int i = 0; i < 39; i++) {
             fwrite(&c2, sizeof(char), 1, binFile);
         }
-    }else {
+    } else {
         fwrite(&(pessoa->nomePessoa), 40 * sizeof(char), 1, binFile);
-        fseek(binFile,-(40-strlen(pessoa->nomePessoa)-1),SEEK_CUR);
-        tamanho = ftell(binFile);
-        for(int i = 0; i < (39 - strlen(pessoa->nomePessoa)); i++) {
+        fseek(binFile, -(40 - strlen(pessoa->nomePessoa) - 1), SEEK_CUR);
+
+        for (int i = 0; i < (39 - strlen(pessoa->nomePessoa)); i++) {
             fwrite(&c2, sizeof(char), 1, binFile);
         }
     }
-    tamanho = ftell(binFile);
 
-    fwrite(pessoa->idade, sizeof(int), 1, binFile);
-    tamanho = ftell(binFile);
+    fwrite(&(pessoa->idade), sizeof(int), 1, binFile);
 
-    fwrite(pessoa->twitterPessoa, 15*sizeof(char), 1, binFile);
-    tamanho = ftell(binFile);
-    fseek(binFile,-(15-strlen(pessoa->twitterPessoa)-1),SEEK_CUR);
-    tamanho = ftell(binFile);
+    fwrite(&(pessoa->twitterPessoa), 15 * sizeof(char), 1, binFile);
 
-    for(int i = 0; i < (14-strlen(pessoa->twitterPessoa)); i++) {
+    fseek(binFile, -(15 - strlen(pessoa->twitterPessoa) - 1), SEEK_CUR);
+
+
+    for (int i = 0; i < (14 - strlen(pessoa->twitterPessoa)); i++) {
         fwrite(&c2, sizeof(char), 1, binFile);
     }
-    tamanho = ftell(binFile);
 }
 
 
