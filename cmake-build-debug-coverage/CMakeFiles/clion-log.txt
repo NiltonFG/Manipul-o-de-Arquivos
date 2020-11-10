@@ -1,0 +1,4 @@
+C:\Users\gavaz\AppData\Local\JetBrains\CLion2020.2\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=--coverage -DCMAKE_C_FLAGS=--coverage -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/gavaz/CLionProjects/untitled
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /cygdrive/c/Users/gavaz/CLionProjects/untitled/cmake-build-debug-coverage
