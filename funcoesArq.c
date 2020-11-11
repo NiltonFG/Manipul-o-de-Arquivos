@@ -89,14 +89,9 @@ void insereBinario(Pessoa* pessoa, FILE* binFile) {
     char c2 = '$';
     char c3 = '\0';
 
-
-    printf("%d %s %d %s\n", pessoa->idPessoa, pessoa->nomePessoa, pessoa->idade, pessoa->twitterPessoa);
-
     fwrite(&c, sizeof(char), 1, binFile);
 
-
     fwrite(&(pessoa->idPessoa), sizeof(int), 1, binFile);
-
 
     int y = strlen(pessoa->nomePessoa);
     if (strlen(pessoa->nomePessoa) == 0) {

@@ -20,44 +20,40 @@ void imprimeArqBin(char *arqPessoa){
     int quantRegistros;
     char auxVerifIntegridade;
     char auxVerifReg;
-    long tamanho;
 
     auxVerifIntegridade = fread(&auxVerifIntegridade, sizeof(char), 1, binFile);
-    tamanho = ftell(binFile);
 
     if (auxVerifIntegridade == '0') {
         return;
     } else {
-        quantRegistros = fread(&quantRegistros, sizeof(int), 1, binFile);
-        tamanho = ftell(binFile);
+        fread(&quantRegistros, sizeof(int), 1, binFile);
 
         fseek(binFile, 0, SEEK_SET);
-        tamanho = ftell(binFile);
 
         fseek(binFile, 64, SEEK_SET);
-        tamanho = ftell(binFile);
 
         int count = 0;
-        while(fread(&auxVerifReg, sizeof(char), 1, binFile)!= EOF) {
-            tamanho = ftell(binFile);
+        while(count < quantRegistros) {
+
             count++;
-            if(auxVerifReg == 0) {
+            fread(&auxVerifReg, sizeof(char), 1, binFile);
+            if(auxVerifReg == '0') {
                 printf("Registro inexistente.");
-                tamanho = ftell(binFile);
+
                 fseek(binFile,64,SEEK_SET);
-                tamanho = ftell(binFile);
+
                 fseek(binFile,count*64,SEEK_CUR);
-                tamanho = ftell(binFile);
+
             }
-            tamanho = ftell(binFile);
+
             fread(&pessoa.idPessoa, sizeof(int), 1, binFile);
-            tamanho = ftell(binFile);
+
             fread(&pessoa.nomePessoa, sizeof(char), 40, binFile);
-            tamanho = ftell(binFile);
+
             fread(&pessoa.idade, sizeof(int), 1, binFile);
-            tamanho = ftell(binFile);
+
             fread(&pessoa.twitterPessoa, sizeof(char), 15, binFile);
-            tamanho = ftell(binFile);
+
             printPessoa(pessoa);
         }
     }
