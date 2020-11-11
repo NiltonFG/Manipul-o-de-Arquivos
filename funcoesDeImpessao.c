@@ -12,7 +12,6 @@ void imprimeArqBin(char *arqPessoa){
     FILE* binFile = fopen(arqPessoa, "rb");
     if (binFile == NULL) {
         printf("Falha no processamento do arquivo.");
-        fclose(binFile);
         return;
     }
 

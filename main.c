@@ -29,11 +29,11 @@ int main() {
             break;
         case 3:
             scanf("%s %s %s",arqPessoa, arqIndexaPessoa,nomeCampo);
-            if(strcmp(nomeCampo,"idPessoa")||strcmp(nomeCampo,"idadePessoa")){
+            if(strcmp(nomeCampo,"idPessoa") == 0 ||strcmp(nomeCampo,"idadePessoa") == 0 && nomeCampo[0] == 'i'){
                 scanf("%d",&valor);
-                buscaArquivo_int(arqPessoa,nomeCampo,nomeCampo,valor);
-            }
-            if(strcmp(nomeCampo,"nomePessoa")||strcmp(nomeCampo,"twitterPessoa")){
+                buscaArquivo_int(arqPessoa,arqIndexaPessoa,nomeCampo,valor);
+            }else
+            if(strcmp(nomeCampo,"nomePessoa") == 0||strcmp(nomeCampo,"twitterPessoa") == 0){
                 scanf("%s",conteudo);
                 buscaArquivo_String(arqPessoa,nomeCampo,conteudo);
             }

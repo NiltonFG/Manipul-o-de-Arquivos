@@ -17,7 +17,6 @@ void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
     FILE* binFile = fopen(arqPessoa, "wb");
     if(binFile == NULL){
         printf("Falha no carregamento do arquivo.");
-        fclose(binFile);
         return;
     }
     fwrite(&c, sizeof(char), 1, binFile);
@@ -28,14 +27,12 @@ void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
     FILE *csvFile = fopen(arqvEntrada, "r");
     if(csvFile == NULL){
         printf("Falha no carregamento do arquivo.");
-        fclose(csvFile);
         return;
     }
 
     FILE* indexFile = fopen(arqIndexaPessoa,"wb");
     if(indexFile == NULL){
         printf("Falha no carregamento do arquivo.");
-        fclose(binFile);
         return;
     }
 

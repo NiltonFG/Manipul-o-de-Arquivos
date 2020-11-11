@@ -18,7 +18,8 @@ typedef struct pessoa{
     int RRN;
 } Pessoa;
 
-void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa);
+Pessoa *pesquisa_idade(FILE *binFile, int valor,int verificao);
+        void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa);
 void insereBinario(Pessoa* pessoa, FILE* binFile);
 void setCabecalho(FILE* binFile, int quantRegistros);
 void insereIndex(Lista* li, Pessoa* pessoa);
