@@ -3,6 +3,7 @@
 //
 
 #include "ListaDinEncad.h"
+#include "funcoesArq.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,8 +14,21 @@ struct elemento{
 };
 typedef struct elemento Elem;
 
+struct pessoa1{
+    Pessoa pessoa;
+    struct pessoa1 *prox;
+};
+typedef struct pessoa1 Elem1;
+
 Lista* cria_lista(){
     Lista* li = (Lista*) malloc(sizeof(Lista));
+    if(li != NULL)
+        *li = NULL;
+    return li;
+}
+
+Lista1* cria_lista1(){
+    Lista1* li = (Lista1*) malloc(sizeof(Lista1));
     if(li != NULL)
         *li = NULL;
     return li;
@@ -23,6 +37,18 @@ Lista* cria_lista(){
 void libera_lista(Lista* li){
     if(li != NULL){
         Elem* no;
+        while((*li) != NULL){
+            no = *li;
+            *li = (*li)->prox;
+            free(no);
+        }
+        free(li);
+    }
+}
+
+void libera_lista1(Lista1* li){
+    if(li != NULL){
+        Elem1* no;
         while((*li) != NULL){
             no = *li;
             *li = (*li)->prox;
@@ -47,6 +73,29 @@ int consulta_lista_id(Lista* li, int id, struct index *al){
     }
 }
 
+int insere_lista_final(Lista1* li, Pessoa pessoa){
+    if(li == NULL)
+        return 0;
+    Elem1* no;
+    no = (Elem1*)malloc(sizeof(Elem1));
+    if(no == NULL)
+        return 0;
+
+    no->pessoa = pessoa;
+    no->prox = NULL;
+
+    if((*li) == NULL){
+        *li = no;
+    }else {
+        Elem1 *aux;
+        aux = *li;
+        while(aux->prox != NULL){
+            aux = aux->prox;
+        }
+        aux->prox = no;
+    }
+    return 1;
+}
 
 int insere_lista_ordenada(Lista* li, struct index al){
     if(li == NULL)
@@ -121,6 +170,20 @@ void imprime_lista(Lista* li){
         no = no->prox;
     }
 }
+
+void pre_insere_bin(Lista1* li,FILE* binFile){
+    if(li == NULL)
+        return;
+    Elem1* no;
+    no = *li;
+    char c;
+    while(fread(&c, sizeof(char), 1, binFile) != 0 && no != NULL) {
+        fseek(binFile,-1,SEEK_CUR);
+        insereBinario(&no->pessoa,binFile);
+        no = no->prox;
+    }
+}
+
 
 void salva_arq(Lista* li, FILE *indexFile){
     char c = '0';

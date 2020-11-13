@@ -43,17 +43,18 @@ void imprimeArqBin(char *arqPessoa){
 
                 fseek(binFile,count*64,SEEK_CUR);
 
+            }else {
+
+                fread(&pessoa.idPessoa, sizeof(int), 1, binFile);
+
+                fread(&pessoa.nomePessoa, sizeof(char), 40, binFile);
+
+                fread(&pessoa.idade, sizeof(int), 1, binFile);
+
+                fread(&pessoa.twitterPessoa, sizeof(char), 15, binFile);
+
+                printPessoa(pessoa);
             }
-
-            fread(&pessoa.idPessoa, sizeof(int), 1, binFile);
-
-            fread(&pessoa.nomePessoa, sizeof(char), 40, binFile);
-
-            fread(&pessoa.idade, sizeof(int), 1, binFile);
-
-            fread(&pessoa.twitterPessoa, sizeof(char), 15, binFile);
-
-            printPessoa(pessoa);
         }
     }
     fclose(binFile);
