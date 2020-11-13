@@ -8,10 +8,10 @@
 
 
 void insereAtualiza(FILE* binFile,Pessoa* pessoa);
-void compactaBin(char* arqPessoa);
-Pessoa auxilirCompacta(FILE* binFile, int count);
+void compactaBin(FILE* binFile, int count,char* arqIndexaPessoa);
+Pessoa auxilirCompacta(FILE* binFile);
 void pre_insere();
-
+void atualizaCampo();
 
 
 #endif //UNTITLED_INSERCAOATUALIZACAO_H

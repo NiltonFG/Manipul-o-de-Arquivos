@@ -177,7 +177,7 @@ void pre_insere_bin(Lista1* li,FILE* binFile){
     Elem1* no;
     no = *li;
     char c;
-    while(fread(&c, sizeof(char), 1, binFile) != 0 && no != NULL) {
+    while(no != NULL && fread(&c,sizeof(char),1,binFile)){
         fseek(binFile,-1,SEEK_CUR);
         insereBinario(&no->pessoa,binFile);
         no = no->prox;

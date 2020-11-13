@@ -42,6 +42,7 @@ int main() {
             pre_insere();
             break;
         case 5:
+            atualizaCampo();
             break;
     }
     return 0;
