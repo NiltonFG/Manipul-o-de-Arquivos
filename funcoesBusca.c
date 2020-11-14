@@ -169,9 +169,8 @@ Pessoa* pesquisa_id(FILE *binFile, FILE *indexFile, int valor) {
     int RRN = -1;
     int flag = 0;
 
-    while (!feof(indexFile)) {
+    while (fread(&id_aux, sizeof(int), 1, indexFile) != 0) {
 
-        fread(&id_aux, sizeof(int), 1, indexFile);
         if (id_aux == valor) {
             fread(&RRN, sizeof(int), 1, indexFile);
             flag = 1;
@@ -202,6 +201,8 @@ Pessoa* pesquisa_id(FILE *binFile, FILE *indexFile, int valor) {
 
         fread(&pessoa->twitterPessoa, sizeof(char) * 15, 1, binFile);
 
+        pessoa->RRN = RRN;
+
         return pessoa;
     }
 }
@@ -215,6 +216,7 @@ Pessoa *pesquisa_idade(FILE *binFile, int valor,int verificao) {
     int flag = 0;
     char verifica;
     int idade_aux;
+    int RRN = 0;
 
     while (fread(&verifica, sizeof(char), 1, binFile) != 0) {
         if (verifica == '1') {
@@ -227,9 +229,11 @@ Pessoa *pesquisa_idade(FILE *binFile, int valor,int verificao) {
                 fread(&pessoa->nomePessoa, sizeof(char) * 40, 1, binFile);
                 fread(&pessoa->idade, sizeof(int), 1, binFile);
                 fread(&pessoa->twitterPessoa, sizeof(char) * 15, 1, binFile);
+                pessoa->RRN = RRN;
                 return pessoa;
             }
         }
+        RRN++;
         fseek(binFile, 15, SEEK_CUR);
     }
     if (flag == 0) {
@@ -248,6 +252,8 @@ Pessoa* pesquisa_nome(FILE *binFile, char *conteudo,int verificao) {
     int flag = 0;
     char verifica;
     char nome_aux[60];
+    int RRN = 0;
+
 
     while (fread(&verifica, sizeof(char), 1, binFile) != 0) {
         if (verifica == '1') {
@@ -257,7 +263,7 @@ Pessoa* pesquisa_nome(FILE *binFile, char *conteudo,int verificao) {
             int c, a;
             c = 0;
             a = 0;
-            while (a < strlen(conteudo) && c == 0) {
+            while (a <= strlen(conteudo) && c == 0) {
                 if (nome_aux[a] == conteudo[a]) {
                     c = 0;
                 } else {
@@ -271,10 +277,12 @@ Pessoa* pesquisa_nome(FILE *binFile, char *conteudo,int verificao) {
                 fread(&pessoa->nomePessoa, sizeof(char) * 40, 1, binFile);
                 fread(&pessoa->idade, sizeof(int), 1, binFile);
                 fread(&pessoa->twitterPessoa, sizeof(char) * 15, 1, binFile);
+                pessoa->RRN= RRN;
                 return pessoa;
             }
             fseek(binFile, 19, SEEK_CUR);
         }
+        RRN++;
     }
         if (flag == 0) {
             pessoa->idade = -2;
@@ -290,6 +298,7 @@ Pessoa* pesquisa_twitter(FILE *binFile, char *conteudo){
     int flag = 0;
     char verifica;
     char nome_aux[60];
+    int RRN = 0;
 
     while (fread(&verifica, sizeof(char), 1, binFile) != 0) {
         if (verifica == '1') {
@@ -314,10 +323,12 @@ Pessoa* pesquisa_twitter(FILE *binFile, char *conteudo){
                     fread(&pessoa->nomePessoa, sizeof(char) * 40, 1, binFile);
                     fread(&pessoa->idade, sizeof(int), 1, binFile);
                     fread(&pessoa->twitterPessoa, sizeof(char) * 15, 1, binFile);
+                    pessoa->RRN = RRN;
                     return pessoa;
                 }
             }
         }
+        RRN++;
     }
     if (flag == 0) {
         pessoa->idade = -2;
@@ -328,7 +339,8 @@ Pessoa* pesquisa_twitter(FILE *binFile, char *conteudo){
 bool verificaCabecalhoArqDados(FILE *binFile) {
     char verifCabecArq;
     fseek(binFile,0,SEEK_SET);
-    if (fread(&verifCabecArq, sizeof(char), 1, binFile) == '0') {
+    fread(&verifCabecArq, sizeof(char), 1, binFile);
+    if (verifCabecArq == '0') {
         printf("Falha no processamento do arquivo.");
         return false;
     } else {
@@ -340,7 +352,8 @@ bool verificaCabecalhoArqDados(FILE *binFile) {
 bool verificaCabecalhoArqIndex(FILE *indexFile) {
     char verifCabecArq;
     fseek(indexFile,0,SEEK_SET);
-    if (fread(&verifCabecArq, sizeof(char), 1, indexFile) == '0') {
+    fread(&verifCabecArq, sizeof(char), 1, indexFile);
+    if (verifCabecArq == '0') {
         printf("Falha no processamento do arquivo.");
         return false;
     } else {

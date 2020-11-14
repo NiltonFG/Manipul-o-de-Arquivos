@@ -166,7 +166,7 @@ void imprime_lista(Lista* li){
         return;
     Elem* no = *li;
     while(no != NULL){
-        printf("%d %d\n",no->dados.RRN,no->dados.idPessoa);
+        printf("%d %d\n",no->dados.idPessoa,no->dados.RRN);
         no = no->prox;
     }
 }

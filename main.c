@@ -20,8 +20,9 @@ int main() {
     switch(mode){
         case 1:
             scanf("%s %s %s",arqvEntrada,arqPessoa,arqIndexaPessoa);
-            leArqBin(arqvEntrada,arqPessoa,arqIndexaPessoa);
-            binarioNaTela1(arqPessoa, arqIndexaPessoa);
+           if(leArqBin(arqvEntrada,arqPessoa,arqIndexaPessoa) == 0) {
+               binarioNaTela1(arqPessoa, arqIndexaPessoa);
+           }
             break;
         case 2:
             scanf("%s",arqPessoa);
@@ -42,8 +43,10 @@ int main() {
             pre_insere();
             break;
         case 5:
-            atualizaCampo();
+            pre_atualizaCampo();
             break;
+        default:
+            return 0;
     }
     return 0;
 }

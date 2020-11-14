@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
+int leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
     Lista* li = cria_lista();
     Pessoa* pessoa = (Pessoa*)malloc(sizeof(Pessoa));
 
@@ -17,7 +17,7 @@ void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
     FILE* binFile = fopen(arqPessoa, "wb");
     if(binFile == NULL){
         printf("Falha no carregamento do arquivo.");
-        return;
+        return 1;
     }
     fwrite(&c, sizeof(char), 1, binFile);
     for(int i = 0; i < 63; i++) {
@@ -27,13 +27,13 @@ void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
     FILE *csvFile = fopen(arqvEntrada, "r");
     if(csvFile == NULL){
         printf("Falha no carregamento do arquivo.");
-        return;
+        return 1;
     }
 
     FILE* indexFile = fopen(arqIndexaPessoa,"wb");
     if(indexFile == NULL){
         printf("Falha no carregamento do arquivo.");
-        return;
+        return 1;
     }
 
     char cabec[256];
@@ -71,7 +71,7 @@ void leArqBin(char* arqvEntrada ,char* arqPessoa,char* arqIndexaPessoa){
     fclose(indexFile);
     libera_lista(li);
     free(pessoa);
-    return;
+    return 0;
 }
 
 void insereIndex(Lista* li, Pessoa* pessoa){
