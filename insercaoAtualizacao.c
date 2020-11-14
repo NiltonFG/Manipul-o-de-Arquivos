@@ -171,6 +171,7 @@ Pessoa auxilirCompacta(FILE* binFile){
 }
 
 void pre_atualizaCampo(){
+    Lista* li = cria_lista();
     Pessoa* pessoa;
     int n;
     char c = '0';
@@ -199,11 +200,17 @@ void pre_atualizaCampo(){
     fwrite(&c,sizeof(char),1,binFile);
     fwrite(&c,sizeof(char),1,indexFile);
 
-    long tamanho = ftell(binFile);
     char buffer[100];
     int numMudancas;
     Pessoa* pessoaAux;
     int flag[4];
+
+    struct index index1;
+    fseek(indexFile,8,SEEK_SET);
+    while(fread(&index1.idPessoa,sizeof(int),1,indexFile)){
+        fread(&index1.RRN,sizeof(int),1,indexFile);
+        insere_lista_ordenada(li,index1);
+    }
 
     for(int i = 0; i < n ; i++) {
 
@@ -214,7 +221,6 @@ void pre_atualizaCampo(){
         switch (aux_selecao) {
             case 0:
                 return;
-
             case 1:
                 fseek(binFile,64,SEEK_SET);
                 scanf("%d",&pessoa->idPessoa);
@@ -231,18 +237,11 @@ void pre_atualizaCampo(){
                     switch (aux_selecao) {
                         case 1:
                             scanf("%d",&id_aux3);
-
-                            fseek(indexFile,7,SEEK_SET);
-                            while(fread(&id_aux,sizeof(int),1,indexFile)){
-                                fread(&RRN,sizeof(int),1,indexFile);
-                                if(id_aux == pessoa->idPessoa){
-                                    fseek(indexFile,-8,SEEK_CUR);
-                                    break;
-                                }
-                            }
+                            remove_lista(li, pessoa->idPessoa);
                             pessoa->idPessoa = id_aux3;
-                            fwrite(&pessoa->idPessoa,sizeof(int),1,indexFile);
-
+                            index1.idPessoa = pessoa->idPessoa;
+                            index1.RRN = pessoa->RRN;
+                            insere_lista_ordenada(li,index1);
                             break;
                         case 2:
                             scan_quote_string(pessoa->nomePessoa);
@@ -262,6 +261,7 @@ void pre_atualizaCampo(){
                 fseek(binFile,64 * pessoa->RRN,SEEK_CUR);
                 insereBinario(pessoa,binFile);
                 break;
+
 
             case 2:
                 for (int t = 0;t <4;t++){
@@ -301,10 +301,13 @@ void pre_atualizaCampo(){
                     }
                 }
 
+                int flag_primeiroRRN_nome = 0;
                 while (fread(&charAux,sizeof(char),1,binFile) != 0) {
                     fseek(binFile,-1,SEEK_CUR);
                     pessoa = pesquisa_nome(binFile, nome_aux,1);
-                    if(pessoaAux->RRN == 0) {
+
+                    if(pessoaAux->RRN == 0 && flag_primeiroRRN_nome != 1) {
+                        flag_primeiroRRN_nome++;
                         pessoaAux->RRN += pessoa->RRN;
                     }else {
                         pessoaAux->RRN += pessoa->RRN;
@@ -315,16 +318,11 @@ void pre_atualizaCampo(){
                         break;
                     }
                     if (flag[0]!= 0){
-                        fseek(indexFile,7,SEEK_SET);
-                        while(fread(&id_aux,sizeof(int),1,indexFile)){
-                            fread(&RRN,sizeof(int),1,indexFile);
-                            if(id_aux == pessoa->idPessoa){
-                                fseek(indexFile,-8,SEEK_CUR);
-                                break;
-                            }
-                        }
+                        remove_lista(li, pessoa->idPessoa);
                         pessoa->idPessoa = pessoaAux->idPessoa;
-                        fwrite(&pessoa->idPessoa,sizeof(int),1,indexFile);
+                        index1.idPessoa = pessoa->idPessoa;
+                        index1.RRN = pessoaAux->RRN;
+                        insere_lista_ordenada(li,index1);
                     }
                     if (flag[1]!= 0){
                         strcpy(pessoa->nomePessoa,pessoaAux->nomePessoa);
@@ -395,16 +393,11 @@ void pre_atualizaCampo(){
                         pessoaAux->RRN++;
                     }
                     if (flag[0]!= 0){
-                        fseek(indexFile,7,SEEK_SET);
-                        while(fread(&id_aux,sizeof(int),1,indexFile)){
-                            fread(&RRN,sizeof(int),1,indexFile);
-                            if(id_aux == pessoa->idPessoa){
-                                fseek(indexFile,-8,SEEK_CUR);
-                                break;
-                            }
-                        }
+                        remove_lista(li, pessoa->idPessoa);
                         pessoa->idPessoa = pessoaAux->idPessoa;
-                        fwrite(&pessoa->idPessoa,sizeof(int),1,indexFile);
+                        index1.idPessoa = pessoa->idPessoa;
+                        index1.RRN = pessoaAux->RRN;
+                        insere_lista_ordenada(li,index1);
                     }
                     if (flag[1]!= 0){
                         strcpy(pessoa->nomePessoa,pessoaAux->nomePessoa);
@@ -439,17 +432,11 @@ void pre_atualizaCampo(){
                     switch (aux_selecao) {
                         case 1:
                             scanf("%d",&id_aux2);
-                            fseek(indexFile,7,SEEK_SET);
-                            while(fread(&id_aux,sizeof(int),1,indexFile)){
-                                fread(&RRN,sizeof(int),1,indexFile);
-                                if(id_aux == pessoa->idPessoa){
-                                    fseek(indexFile,-8,SEEK_CUR);
-                                    break;
-                                }
-                            }
+                            remove_lista(li, pessoa->idPessoa);
                             pessoa->idPessoa = id_aux2;
-                            fwrite(&pessoa->idPessoa,sizeof(int),1,indexFile);
-
+                            index1.idPessoa = pessoa->idPessoa;
+                            index1.RRN = pessoa->RRN;
+                            insere_lista_ordenada(li,index1);
                             break;
                         case 2:
                             scan_quote_string(pessoa->nomePessoa);
@@ -469,10 +456,10 @@ void pre_atualizaCampo(){
                 insereBinario(pessoa,binFile);
 
                 break;
-            default:
-                return;
         }
     }
+
+    salva_arq(li,indexFile);
 
     fseek(binFile,0,SEEK_SET);
     fseek(indexFile,0,SEEK_SET);
